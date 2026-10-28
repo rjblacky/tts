@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LocalVoice – Natural AI voices to MP3</title>
+<meta name="theme-color" content="#ffffff"><link rel="icon" href="icons/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://huggingface.co" crossorigin>
+<script>/* multi-core boot: lets the AI voice use more than one CPU core on GitHub Pages. Add ?safe to the address to turn off. */
+(()=>{try{
+if(/[?&]safe\b/.test(location.search))localStorage.setItem('lv_safe','1');
+if(/[?&]fast\b/.test(location.search))localStorage.removeItem('lv_safe');
+if(!('serviceWorker' in navigator)||!window.isSecureContext||!('credentialless' in HTMLIFrameElement.prototype))return;
+if(localStorage.getItem('lv_safe')==='1'){navigator.serviceWorker.getRegistrations().then(r=>{r.forEach(x=>x.unregister());if(r.length&&crossOriginIsolated)location.reload()});return}
+if(crossOriginIsolated)return;
+const go=()=>{if(!sessionStorage.getItem('lv_coi')){sessionStorage.setItem('lv_coi','1');location.reload()}};
+navigator.serviceWorker.register('coi-sw.js').then(r=>{if(r.active&&navigator.serviceWorker.controller===null)go()});
+navigator.serviceWorker.addEventListener('controllerchange',go);
+}catch(e){}})();</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('lv_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}</script></head><body>
+<nav class="nav"><div class="nw"><a class="logo" href="#top"><img src="icons/favicon.svg" alt="" width="26" height="26">LocalVoice</a>
+<div class="nl"><a href="#" data-open>Voices</a><a href="#studio">Studio</a></div>
+<div class="nr"><button id="theme" class="ib" aria-label="Toggle light or dark mode"></button><a class="btn sm" href="#studio">Get started</a></div></div></nav>
+<main id="top">
+<section class="hero"><span class="eyebrow"><i data-ic="spark"></i>28 natural AI voices · Free · No account</span>
+<h1>Voices that sound human.<br><em>Audio you can keep.</em></h1>
+<p>Preview every voice, pick the one you love, then turn text or PDFs into MP3 files. Everything runs privately in your browser.</p>
+<div class="cta"><a class="btn lg" href="#" data-open>Choose a voice</a><a class="lnk" href="#studio">Open the studio <i data-ic="chev"></i></a></div>
+<div class="stage"><div class="stack" id="stack"></div><div class="wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div></section>
+
+<section class="alt" id="studio"><div class="wrap"><h2>Create your audio.</h2><p class="sub">Write or upload, tune the voice, generate, listen, then download.</p>
+<div class="sg"><div class="panel main">
+<div class="tb"><span class="pill" id="cnt">0 characters</span><div class="seg" id="tabs"><button class="on" data-t="tts"><i data-ic="type"></i>Text</button><button data-t="book"><i data-ic="doc"></i>PDF / TXT</button></div><span class="grow"></span>
+<label class="gb"><i data-ic="up"></i>Open .txt<input type="file" id="tf" accept=".txt,text/plain" hidden></label><button class="gb" id="cl"><i data-ic="x"></i>Clear</button></div>
+<div class="tab on" id="tts"><textarea id="txt" placeholder="Enter your text here…"></textarea></div>
+<div class="tab" id="book"><label class="drop" id="dz"><div class="fi"><i data-ic="up"></i></div><b id="dn">Drop a PDF or TXT file</b><span id="di">or click to browse</span><input type="file" id="bf" accept=".pdf,.txt,text/plain,application/pdf" hidden></label></div>
+<div class="player" id="plr" hidden><audio id="au" preload="metadata"></audio><button class="pp" id="pp" aria-label="Play or pause"></button><span class="tm" id="tc">0:00</span><input type="range" id="sk" min="0" max="1000" value="0" aria-label="Seek"><span class="tm" id="td">0:00</span><a class="btn bl" id="dl"><i data-ic="down"></i>Download</a></div></div>
+<div class="panel side"><div class="lab"><span class="cap">VOICE SETTINGS</span><button class="ib" id="rst" aria-label="Reset settings"><i data-ic="reset"></i></button></div>
+<button class="vcard" id="pick" aria-haspopup="dialog"></button>
+<div class="sl"><div class="lab"><b>Speed</b><span id="spv">1.00×</span></div><input type="range" id="sp" min=".6" max="1.5" step=".05" value="1"></div>
+<div class="sl"><div class="lab"><b>Pitch</b><span id="piv">0%</span></div><input type="range" id="pi" min="-.25" max=".25" step=".05" value="0"></div>
+<div class="sl"><div class="lab"><b>Audio level</b><span id="vov">100%</span></div><input type="range" id="vo" min=".2" max="1.5" step=".05" value="1"></div>
+<button class="btn lg full" id="go"><i data-ic="spark"></i>Generate Speech</button>
+<div class="pg" id="pgw" hidden><div class="pt"><span id="st">Ready</span><b id="pct">0%</b></div><div class="bar"><i id="pb"></i></div></div></div></div></div></section>
+</main>
+<footer>LocalVoice · AI voices run on your device and nothing is sent to any server. Created by RJxBlack for lite, personal, non-professional use. Images by randomuser.me.</footer>
+<div class="md" id="md" hidden><div class="dlg" role="dialog" aria-modal="true" aria-label="Choose a voice"><div class="dh"><h3>Choose a voice</h3><button class="ib" data-close aria-label="Close"><i data-ic="x"></i></button></div><div class="vl" id="vl"></div></div></div>
+<div id="toast"></div><script src="js/voices.js"></script><script src="js/engine.js"></script><script src="js/app.js"></script></body></html>

@@ -1,0 +1,23 @@
+LocalVoice Personal Use License
+Copyright (c) 2026 RJxBlack
+
+Permission is granted to any person to download, run, copy and modify the
+LocalVoice source code in this repository for PERSONAL, NON-COMMERCIAL,
+LITE USE only (learning, hobby projects, personal listening, accessibility).
+
+You may NOT:
+  1. Use this software for professional or commercial purposes, including
+     selling, sublicensing, offering it as a paid service, or using its
+     output in paid client work.
+  2. Remove or alter this license or the author credit.
+
+You MAY share it with others under these same terms, with credit to the
+original author, RJxBlack.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. THE AUTHOR IS NOT LIABLE FOR ANY CLAIM OR DAMAGES ARISING FROM ITS USE.
+
+Third-party components (Kokoro-82M / kokoro-js, pdf.js, lamejs, and the
+randomuser.me portraits) keep their own licenses and terms. This license only
+covers the original LocalVoice code written by the author. Please check each
+component's license before any redistribution.

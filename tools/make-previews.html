@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LocalVoice · Make voice previews</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>body{padding:28px 18px}.box{max-width:720px;margin:0 auto}h1{font-size:28px;margin:0 0 6px}ol{color:var(--m);line-height:1.7;padding-left:20px}.row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+#log{font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;background:var(--alt);border:1px solid var(--line);border-radius:14px;padding:14px;height:300px;overflow:auto;white-space:pre-wrap}</style></head><body><div class="box">
+<h1>🎙️ Make voice previews</h1>
+<p class="sub" style="font-size:16px;margin:0 0 14px">Run this <b>once</b>. It records a short “Hi, I'm …” sample for every voice, so the website can play previews instantly later.</p>
+<ol><li>Click <b>Create all previews</b> and wait (a few minutes the first time; it downloads the ~90 MB voice engine once).</li>
+<li>Click <b>Download previews.zip</b> and unzip it inside your repo folder. The files land in <code>audio/previews/</code>.</li>
+<li>Upload / commit the <code>audio</code> folder to GitHub. Done.</li></ol>
+<div class="row"><button class="btn lg" id="go">Create all previews</button><button class="btn lg bl" id="zip" hidden>Download previews.zip</button></div>
+<div class="pg"><div class="pt"><span id="st">Ready</span><b id="pct">0%</b></div><div class="bar"><i id="pb"></i></div></div><br><div id="log"></div></div>
+<script src="../js/voices.js"></script><script src="../js/engine.js"></script>
+<script>
+const $=s=>document.querySelector(s),log=m=>{const l=$('#log');l.textContent+=m+'\n';l.scrollTop=l.scrollHeight},prog=p=>{$('#pb').style.width=p*100+'%';$('#pct').textContent=Math.round(p*100)+'%'};
+const E=createEngine('../js/',p=>$('#st').textContent='Downloading voice engine (one time)… '+p+'%');
+/* minimal ZIP writer (no compression, MP3s are already compressed) */
+const CT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c}return t})();
+const crc32=u=>{let c=-1;for(let i=0;i<u.length;i++)c=CT[(c^u[i])&255]^(c>>>8);return(c^-1)>>>0};
+function makeZip(files){const te=new TextEncoder(),parts=[],cen=[];let off=0;
+ for(const f of files){const nb=te.encode(f.name),crc=crc32(f.data),n=f.data.length,l=new DataView(new ArrayBuffer(30));
+  l.setUint32(0,0x04034b50,true);l.setUint16(4,20,true);l.setUint16(6,0x0800,true);l.setUint16(12,0x21,true);l.setUint32(14,crc,true);l.setUint32(18,n,true);l.setUint32(22,n,true);l.setUint16(26,nb.length,true);
+  parts.push(l,nb,f.data);
+  const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(14,0x21,true);c.setUint32(16,crc,true);c.setUint32(20,n,true);c.setUint32(24,n,true);c.setUint16(28,nb.length,true);c.setUint32(42,off,true);
+  cen.push(c,nb);off+=30+nb.length+n}
+ const cs=cen.reduce((a,x)=>a+(x.byteLength??x.length),0),e=new DataView(new ArrayBuffer(22));
+ e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+ return new Blob([...parts,...cen,e],{type:'application/zip'})}
+let files=[],busy=false;
+$('#go').onclick=async()=>{if(busy)return;busy=true;files=[];$('#go').disabled=true;$('#zip').hidden=true;$('#log').textContent='';
+ try{$('#st').textContent='Loading voice engine…';await E.load();
+  for(let i=0;i<IDS.length;i++){const id=IDS[i];$('#st').textContent=`Recording ${nm(id)} (${i+1} of ${IDS.length})`;
+   const a=await E.synth(previewText(id),id,1),enc=E.encoder(24000,96);enc.add(a.audio,1,1);const r=await enc.finish();
+   files.push({name:`audio/previews/${id}.mp3`,data:new Uint8Array(await r.blob.arrayBuffer())});
+   log(`✓ ${id}.mp3  ${r.secs.toFixed(1)}s  ${(r.blob.size/1024).toFixed(0)} KB`);prog((i+1)/IDS.length)}
+  $('#st').textContent='All done. Download the zip.';$('#zip').hidden=false}
+ catch(e){$('#st').textContent='Failed';log('✗ '+(e.message||e))}
+ busy=false;$('#go').disabled=false};
+$('#zip').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(makeZip(files));a.download='previews.zip';a.click()};
+</script></body></html>
